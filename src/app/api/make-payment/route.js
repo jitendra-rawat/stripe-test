@@ -13,7 +13,7 @@ const createStripeCustomer = async (user_email, user_id) => {
   return customer;
 };
 
-const createPaymentIntent = async (customerId, paymentMethodId, amount, user_id, card_action) => {
+const createPaymentIntent = async (customerId, paymentMethodId, amount, user_id) => {
   const paymentIntent = await stripe.paymentIntents.create({
     amount: amount, 
     currency: 'usd', 
@@ -26,7 +26,7 @@ const createPaymentIntent = async (customerId, paymentMethodId, amount, user_id,
       },
     metadata: {
       user_id,
-      card_action,
+     
     },
   });
   return paymentIntent;
@@ -34,7 +34,7 @@ const createPaymentIntent = async (customerId, paymentMethodId, amount, user_id,
 
 export async function POST(request) {
   try {
-    const { paymentMethodId, user_id, user_email, pm_customer_id, card_action, amount } = await request.json();
+    const { paymentMethodId, user_id, user_email, pm_customer_id, amount } = await request.json();
 
     let customerId = pm_customer_id;
 
@@ -45,7 +45,7 @@ export async function POST(request) {
     }
 
     
-    const paymentIntentResponse = await createPaymentIntent(customerId, paymentMethodId, amount, user_id, card_action);
+    const paymentIntentResponse = await createPaymentIntent(customerId, paymentMethodId, amount, user_id);
 
     return NextResponse.json({
       message: 'Payment processed successfully',
